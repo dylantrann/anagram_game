@@ -1,5 +1,6 @@
 # ___agram
-Diamond Hacks Project for Spring 2024
+*Diamond Hacks Project for Spring 2024*
+Created by Benny Xie and Dylan Tran :)
 
 ## Concept
 A word is displayed as an anagram and the user attempts to guess the original word as fast as possible.
