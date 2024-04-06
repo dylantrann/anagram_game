@@ -1,5 +1,4 @@
 # ___agram
-*Diamond Hacks Project for Spring 2024*
 Created by Benny Xie and Dylan Tran :)
 
 ## Concept
