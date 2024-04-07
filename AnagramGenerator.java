@@ -21,19 +21,9 @@ public class AnagramGenerator {
     private static String word;
 
     public static void main(String[] args) throws Exception {
-        boolean keepPlaying = true;
-        while (keepPlaying)
-        {
-            char[] chars = getInput(args);
-            generateAnagramsRandom(chars);
-            play(word, results);
-//            Scanner sc = new Scanner(System.in);
-//            System.out.println("Wanna keep playing? Say \"yes\" to keep on playing");
-//            sc.nextLine();
-//            String yesOrNo = sc.nextLine();
-//            if (!yesOrNo.equals("yes"))
-//                keepPlaying = false;
-        }
+        char[] chars = getInput(args);
+        generateAnagramsRandom(chars);
+        play(word, results);
     }
 
     public static char[] getInput(String[] args) throws Exception {
@@ -247,7 +237,8 @@ public class AnagramGenerator {
         // Starts the guessing game
         System.out.println("Your anagram is: ");
         for (String anagram : anagrams)
-            System.out.println(anagram);
+            System.out.print(anagram + " ");
+        System.out.println();
         System.out.println("Enter you guess below!");
         while (correct != true) {
             guess = sc.nextLine();
