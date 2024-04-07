@@ -18,9 +18,27 @@ public class AnagramGenerator {
     private static List<String> results;
     private static int numOfWords = 2;
 
-    public static void main(String[] args) throws IOException {
+    private static String word;
+
+    public static void main(String[] args) throws Exception {
+        boolean keepPlaying = true;
+        while (keepPlaying)
+        {
+            char[] chars = getInput(args);
+            generateAnagramsRandom(chars);
+            play(word, results);
+//            Scanner sc = new Scanner(System.in);
+//            System.out.println("Wanna keep playing? Say \"yes\" to keep on playing");
+//            sc.nextLine();
+//            String yesOrNo = sc.nextLine();
+//            if (!yesOrNo.equals("yes"))
+//                keepPlaying = false;
+        }
+    }
+
+    public static char[] getInput(String[] args) throws Exception {
         Random rd = new Random();
-        String word, category;
+        String category;
         char[] chars;
 
         // Creates list of words, given the category is valid, and then randomly picks one
@@ -28,8 +46,7 @@ public class AnagramGenerator {
             category = args[0];
             List<String> words = parseData(category);
             if (words == null) {
-                System.out.println("Invalid category option.");
-                return;
+                throw new IllegalAccessException("Invalid category option. Please enter a valid word");
             }
             // Picks a random word from given choices
             word = words.get(rd.nextInt(words.size()-1));
@@ -40,32 +57,19 @@ public class AnagramGenerator {
             System.out.println("Enter a word without space: ");
             word = scanner.nextLine();
 
-            /* TODO: if we want to increase the amount of words possible
-            * System.out.println("How many words do you want in the anagram? ");
-            * numOfWords = Integer.parseInt(scanner.nextLine());
-            */
+            System.out.println("Let's wait for the anagram");
+            Thread.sleep(1000);
+            System.out.println("Drumroll please: ");
+            Thread.sleep(1000);
+
+
+            // if we want to increase the amount of words possible
+//            System.out.println("How many words do you want in the anagram? ");
+//            numOfWords = Integer.parseInt(scanner.nextLine());
         }
         // Convert the word to a character array
         chars = word.toCharArray();
-
-        // Sort the character array
-        Arrays.sort(chars);
-        
-        // Generate all possible anagrams
-        generateAnagrams(chars, START);
-
-        // // TESTING: Print the anagrams
-        // if (results == null)
-        //     System.out.println("No anagram available");
-        // else {
-        //     System.out.println("Found it! Anagrams are:");
-        //     for (String result : results)
-        //         System.out.print(result + " ");
-        // }
-
-        // TEMP: NEED TO ACTUALLY CHOOSE ANAGRAM
-        String anagram = results.get(0);
-        play(word, anagram);
+        return chars;
     }
 
     /**
@@ -86,13 +90,33 @@ public class AnagramGenerator {
             return;
         }
 
-        // For each character in the array, swap it with the character at the current index and generate all possible anagrams
+        // For each character in the array, swap it with the character at the current
+        // index and generate all possible anagrams
         for (int i = index; i < chars.length; i++) {
             swap(chars, index, i);
             generateAnagrams(chars, index + 1);
             swap(chars, index, i);
             if (found)
                 return;
+        }
+    }
+
+    private static void generateAnagramsRandom(char[] chars) throws IOException {
+        for (int round = 0; round < 10000; round++) {
+            if (round % 10 == 0) System.out.println("Duh-duh-duh-duh-duh");
+            if (found) return;
+            Random rand = new Random();
+            int n = chars.length;
+            for (int i = n - 1; i >= 1; i--) {
+                int j = rand.nextInt(i + 1);
+                char temp = chars[i];
+                chars[i] = chars[j];
+                chars[j] = temp;
+            }
+            List<List<String>> words = separate(new String(chars));
+            results = getAnagramFromWeb(words);
+            if (results != null)
+                found = true;
         }
     }
 
@@ -115,6 +139,20 @@ public class AnagramGenerator {
                 biglist.add(list);
             }
         }
+
+        // Benny:
+        //      I tried to add the feature numOfWords, I failed.
+//        if (chars.length() > numOfWords * MAX_LENGTH)
+//            throw new IllegalArgumentException("word is too long");
+//        int separationMaxLength = chars.length() / numOfWords;
+//        List<String> list = new ArrayList<>();
+//        int separationPoints
+//        for (int i = 0; i < numOfWords; i++)
+//        {
+//            Random rand = new Random();
+//            int j = rand.nextInt(separationMaxLength);
+//            list.add(chars.substring(i * separationMaxLength, ))
+//        }
         return biglist;
     }
 
@@ -201,13 +239,16 @@ public class AnagramGenerator {
         return words;
     }
 
-    private static void play(String original, String anagram) {
+    private static void play(String original, List<String> anagrams) {
         Scanner sc = new Scanner(System.in);
         boolean correct = false, give = false;
         String guess;
         int tally = 1;
         // Starts the guessing game
-        System.out.println("Your anagram is: \"" + anagram + "\" \nEnter your guess below!");
+        System.out.println("Your anagram is: ");
+        for (String anagram : anagrams)
+            System.out.println(anagram);
+        System.out.println("Enter you guess below!");
         while (correct != true) {
             guess = sc.nextLine();
             if (guess.equalsIgnoreCase(original)) {
