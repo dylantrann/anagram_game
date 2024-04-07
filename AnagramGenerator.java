@@ -6,7 +6,7 @@ import java.io.*;
 
 public class AnagramGenerator {
 
-    private static int counter = 0;
+    // TEST: private static int counter = 0;
     private static boolean found = false;
     private static List<String> results;
 
@@ -14,10 +14,14 @@ public class AnagramGenerator {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter a word without space: ");
         String word = scanner.nextLine();
-//        System.out.println("How many words do you want in the anagram? ");
-//        int numOfWords = Integer.parseInt(scanner.nextLine());
 
-        int numOfWords = 2;
+        /* TODO: if we want to increase the amount of words possible
+        * System.out.println("How many words do you want in the anagram? ");
+        * int numOfWords = Integer.parseInt(scanner.nextLine());
+        *
+        * int numOfWords = 2;
+        */
+
         // Convert the word to a character array
         char[] chars = word.toCharArray();
 
@@ -35,18 +39,20 @@ public class AnagramGenerator {
             for (String result : results)
                 System.out.println(result);
         }
+        scanner.close();
     }
 
+    /**
+     * Finds a valid anagram from the user's input.
+     * 
+     * @param chars user input word as a char array
+     * @param index counter and tracks current swapped character
+     */
     private static void generateAnagrams(char[] chars, int index) throws IOException {
-        // If we have reached the end of the array, we have generated an anagram
-        if (found)
-            return;
-
-        counter++;
-        System.out.println(counter);
+        // TEST: counter++;
+        // TEST: System.out.println(counter);
         if (index == chars.length) {
-//            anagrams.add(new String(chars));
-            System.out.println(new String(chars));
+            // TEST: System.out.println(new String(chars));
             List<String> words = separate(new String(chars));
             results = getAnagramFromWeb(words);
             if (results != null)
@@ -64,6 +70,12 @@ public class AnagramGenerator {
         }
     }
 
+    /**
+     * Splits the user's input into two separate strings.
+     * 
+     * @param chars user's input
+     * @return list containing the two disjoint subwords
+     */
     private static List<String> separate(String chars) {
         List<String> list = new ArrayList<>();
         for (int i = chars.length() / 2; i < chars.length(); i++)
@@ -75,20 +87,24 @@ public class AnagramGenerator {
                 list.add(second);
                 return list;
             }
-
         }
         return list;
     }
 
+    /**
+     * Uses Anagramica API to produce an anagram.
+     * 
+     * @param words two strings representing the original query split into two words
+     * @return list of valid anagrams
+     * @throws IOException
+     */
     private static List<String> getAnagramFromWeb(List<String> words) throws IOException {
         List<String> list = new ArrayList<>();
-        System.out.println("Content of words: " + words);
+        final int INTRO = 14; 
+        // TEST: System.out.println("Content of words: " + words);
         for (String word : words)
         {
             // Get apiResult from web;
-            final int INTRO = 14;
-            //String input = ;
-            //if (input.length() > 10) {throw Exception;}
             URL anagramica = new URL("http://www.anagramica.com/best/:" + word);
             URLConnection yc = anagramica.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -103,16 +119,16 @@ public class AnagramGenerator {
             }
             in.close();
 
-            for (String w : best)
-                System.out.println(w);
+            // TEST: for (String w : best) System.out.println(w);
+            // TODO: can randomize the chosen word
             String apiResult = best.get(0);
-//            System.out.println(apiResult);
+            // System.out.println(apiResult);
             if (apiResult.length() != word.length()) {
                 list.clear();
                 return null;
             }
             list.add(apiResult);
-            System.out.println("List content: " + list);
+            // TEST: System.out.println("List content: " + list);
         }
         return list;
     }
