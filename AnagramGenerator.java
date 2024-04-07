@@ -18,36 +18,42 @@ public class AnagramGenerator {
     private static int numOfWords = 2;
 
     public static void main(String[] args) throws IOException {
-        // REMOVE COMMENT: creates words list given the category is valid
-        // if (args.length > EMPTY) {
-        //     List<String> words = parseData(args[0]);
-        //     if (words == null) {
-        //         System.out.println("Invalid category option.");
-        //         return;
-        //     }
-        // }
-        
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter a word without space: ");
-        String word = scanner.nextLine();
+        Random rd = new Random();
+        String word, category;
+        char[] chars;
 
-        /* TODO: if we want to increase the amount of words possible
-        * System.out.println("How many words do you want in the anagram? ");
-        * numOfWords = Integer.parseInt(scanner.nextLine());
-        *
-        *
-        */
+        // Creates list of words, given the category is valid, and then randomly picks one
+        if (args.length > EMPTY) {
+            category = args[0];
+            List<String> words = parseData(category);
+            if (words == null) {
+                System.out.println("Invalid category option.");
+                return;
+            }
+            // Picks a random word from given choices
+            word = words.get(rd.nextInt(words.size()-1));
+        }
+        // Asks the user for their own word of choice
+        else {
+            System.out.println("Enter a word without space: ");
+            word = scanner.nextLine();
 
+            /* TODO: if we want to increase the amount of words possible
+            * System.out.println("How many words do you want in the anagram? ");
+            * numOfWords = Integer.parseInt(scanner.nextLine());
+            */
+        }
         // Convert the word to a character array
-        char[] chars = word.toCharArray();
+        chars = word.toCharArray();
 
         // Sort the character array
         Arrays.sort(chars);
-
+        
         // Generate all possible anagrams
         generateAnagrams(chars, START);
 
-        // Print the anagrams
+        // TESTING: Print the anagrams
         if (results == null)
             System.out.println("No anagram available");
         else {
@@ -55,6 +61,41 @@ public class AnagramGenerator {
             for (String result : results)
                 System.out.print(result + " ");
         }
+
+        // THE ACTUAL GAME: 
+        // boolean correct = false, give = false;
+        // String guess;
+        // int tally = 1;
+        // // Starts the guessing game
+        // System.out.println("Your anagram is: " + results.get(START));
+        // while (correct != true) {
+        //     guess = scanner.nextLine();
+        //     if (guess.equals(word)) {
+        //         correct = true;
+        //         if (tally == 1) {
+        //             System.out.println("Correct! You guessed in it 1 try!");
+        //         }
+        //         else {
+        //             System.out.println("Correct! You guessed it in " + tally + " tries.");
+        //         }
+        //     }
+        //     else if (guess.equals("")) {
+        //         if (give == false) {
+        //             System.out.println("Press enter one more time to give up, or try another guess!");
+        //             give = true;
+        //         }
+        //         else if (give == true) {
+        //             System.out.println("Too bad! The correct answer was: " + word);
+        //             break;
+        //         }
+        //     }
+        //     else {
+        //         tally++;
+        //         System.out.println("Not quite, try again. ");
+        //         give = false;
+        //     }
+        // }
+
         scanner.close();
     }
 
