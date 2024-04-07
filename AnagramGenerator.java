@@ -3,12 +3,14 @@ package anagram_game;
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import java.lang.*;
 
 public class AnagramGenerator {
 
     // TEST: private static int counter = 0;
     private static boolean found = false;
     private static List<String> results;
+    private static int numOfWords = 2;
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -17,9 +19,9 @@ public class AnagramGenerator {
 
         /* TODO: if we want to increase the amount of words possible
         * System.out.println("How many words do you want in the anagram? ");
-        * int numOfWords = Integer.parseInt(scanner.nextLine());
+        * numOfWords = Integer.parseInt(scanner.nextLine());
         *
-        * int numOfWords = 2;
+        *
         */
 
         // Convert the word to a character array
@@ -37,7 +39,7 @@ public class AnagramGenerator {
         else {
             System.out.println("Found it! Anagrams are:");
             for (String result : results)
-                System.out.println(result);
+                System.out.print(result + " ");
         }
         scanner.close();
     }
@@ -53,7 +55,7 @@ public class AnagramGenerator {
         // TEST: System.out.println(counter);
         if (index == chars.length) {
             // TEST: System.out.println(new String(chars));
-            List<String> words = separate(new String(chars));
+            List<List<String>> words = separate(new String(chars));
             results = getAnagramFromWeb(words);
             if (results != null)
                 found = true;
@@ -76,19 +78,20 @@ public class AnagramGenerator {
      * @param chars user's input
      * @return list containing the two disjoint subwords
      */
-    private static List<String> separate(String chars) {
-        List<String> list = new ArrayList<>();
-        for (int i = chars.length() / 2; i < chars.length(); i++)
+    private static List<List<String>> separate(String chars) {
+        List<List<String>> biglist = new ArrayList<>();
+        for (int i = chars.length() / 2; i < chars.length() - 1; i++)
         {
             String first = chars.substring(0, i);
             String second = chars.substring(i);
-            if (first.length() <= 10 && second.length() <= 10) {
+            if (first.length() <= 9 && second.length() <= 9) {
+                List<String> list = new ArrayList<>();
                 list.add(first);
                 list.add(second);
-                return list;
+                biglist.add(list);
             }
         }
-        return list;
+        return biglist;
     }
 
     /**
@@ -98,39 +101,45 @@ public class AnagramGenerator {
      * @return list of valid anagrams
      * @throws IOException
      */
-    private static List<String> getAnagramFromWeb(List<String> words) throws IOException {
+    private static List<String> getAnagramFromWeb(List<List<String>> words) throws IOException {
         List<String> list = new ArrayList<>();
-        final int INTRO = 14; 
+        final int INTRO = 14;
         // TEST: System.out.println("Content of words: " + words);
-        for (String word : words)
+        for (List<String> tupleList : words)
         {
-            // Get apiResult from web;
-            URL anagramica = new URL("http://www.anagramica.com/best/:" + word);
-            URLConnection yc = anagramica.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
-            String inputLine;
-            List<String> best = new ArrayList<>();
-            in.skip(INTRO);
-            while (!((inputLine = in.readLine()).contains("]"))) {
-                int start = inputLine.indexOf('\"') + 1;
-                int end = inputLine.indexOf('\"', start);
-                best.add(inputLine.substring(start, end));
-            }
-            in.close();
+//            System.out.println(tupleList);
+            for (String word : tupleList)
+            {
+                // Get apiResult from web;
+                URL anagramica = new URL("http://www.anagramica.com/best/:" + word);
+                URLConnection yc = anagramica.openConnection();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        yc.getInputStream()));
+                String inputLine;
+                List<String> best = new ArrayList<>();
+                in.skip(INTRO);
+                while (!((inputLine = in.readLine()).contains("]"))) {
+                    int start = inputLine.indexOf('\"') + 1;
+                    int end = inputLine.indexOf('\"', start);
+                    best.add(inputLine.substring(start, end));
+                }
+                in.close();
 
-            // TEST: for (String w : best) System.out.println(w);
-            // TODO: can randomize the chosen word
-            String apiResult = best.get(0);
-            // System.out.println(apiResult);
-            if (apiResult.length() != word.length()) {
-                list.clear();
-                return null;
+                // TEST: for (String w : best) System.out.println(w);
+                // TODO: can randomize the chosen word
+                String apiResult = best.get(0);
+                // System.out.println(apiResult);
+                if (apiResult.length() != word.length()) {
+                    list.clear();
+                    continue;
+                }
+                list.add(apiResult);
+                // TEST: System.out.println("List content: " + list);
             }
-            list.add(apiResult);
-            // TEST: System.out.println("List content: " + list);
+            if (list.size() == numOfWords)
+                return list;
         }
-        return list;
+        return null;
     }
 
     private static void swap(char[] chars, int i, int j) {
