@@ -18,7 +18,6 @@ public class AnagramGenerator {
     private static int numOfWords = 2;
 
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
         Random rd = new Random();
         String word, category;
         char[] chars;
@@ -36,6 +35,7 @@ public class AnagramGenerator {
         }
         // Asks the user for their own word of choice
         else {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Enter a word without space: ");
             word = scanner.nextLine();
 
@@ -53,50 +53,18 @@ public class AnagramGenerator {
         // Generate all possible anagrams
         generateAnagrams(chars, START);
 
-        // TESTING: Print the anagrams
-        if (results == null)
-            System.out.println("No anagram available");
-        else {
-            System.out.println("Found it! Anagrams are:");
-            for (String result : results)
-                System.out.print(result + " ");
-        }
-
-        // THE ACTUAL GAME: 
-        // boolean correct = false, give = false;
-        // String guess;
-        // int tally = 1;
-        // // Starts the guessing game
-        // System.out.println("Your anagram is: " + results.get(START));
-        // while (correct != true) {
-        //     guess = scanner.nextLine();
-        //     if (guess.equals(word)) {
-        //         correct = true;
-        //         if (tally == 1) {
-        //             System.out.println("Correct! You guessed in it 1 try!");
-        //         }
-        //         else {
-        //             System.out.println("Correct! You guessed it in " + tally + " tries.");
-        //         }
-        //     }
-        //     else if (guess.equals("")) {
-        //         if (give == false) {
-        //             System.out.println("Press enter one more time to give up, or try another guess!");
-        //             give = true;
-        //         }
-        //         else if (give == true) {
-        //             System.out.println("Too bad! The correct answer was: " + word);
-        //             break;
-        //         }
-        //     }
-        //     else {
-        //         tally++;
-        //         System.out.println("Not quite, try again. ");
-        //         give = false;
-        //     }
+        // // TESTING: Print the anagrams
+        // if (results == null)
+        //     System.out.println("No anagram available");
+        // else {
+        //     System.out.println("Found it! Anagrams are:");
+        //     for (String result : results)
+        //         System.out.print(result + " ");
         // }
 
-        scanner.close();
+        // TEMP: NEED TO ACTUALLY CHOOSE ANAGRAM
+        String anagram = results.get(0);
+        play(word, anagram);
     }
 
     /**
@@ -181,7 +149,7 @@ public class AnagramGenerator {
                 in.close();
 
                 // TEST: for (String w : best) System.out.println(w);
-                // TODO: can randomize the chosen word
+                // TODO: can randomize the chosen anagram
                 String apiResult = best.get(0);
                 // System.out.println(apiResult);
                 if (apiResult.length() != word.length()) {
@@ -230,5 +198,42 @@ public class AnagramGenerator {
         }
         in.close();
         return words;
+    }
+
+    private static void play(String original, String anagram) {
+        Scanner sc = new Scanner(System.in);
+        boolean correct = false, give = false;
+        String guess;
+        int tally = 1;
+        // Starts the guessing game
+        System.out.println("Your anagram is: \"" + anagram + "\" \nEnter your guess below!");
+        while (correct != true) {
+            guess = sc.nextLine();
+            if (guess.equals(original)) {
+                correct = true;
+                if (tally == 1) {
+                    System.out.println("Correct! You guessed in it 1 try!");
+                }
+                else {
+                    System.out.println("Correct! You guessed it in " + tally + " tries.");
+                }
+            }
+            else if (guess.equals("")) {
+                if (give == false) {
+                    System.out.println("Press enter one more time to give up, or try another guess!");
+                    give = true;
+                }
+                else if (give == true) {
+                    System.out.println("Too bad! The correct answer was: " + original);
+                    break;
+                }
+            }
+            else {
+                tally++;
+                System.out.println("Not quite, try again. ");
+                give = false;
+            }
+        }
+        sc.close();
     }
 }
