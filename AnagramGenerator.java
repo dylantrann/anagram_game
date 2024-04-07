@@ -8,14 +8,25 @@ import java.lang.*;
 public class AnagramGenerator {
     public static final int INTRO = 14;
     public static final int START = 0; 
+    public static final int EMPTY = 0;
     public static final int MAX_LENGTH = 9;
     public static final char DELIMITER = '\"';
+    public static final List<String> INVALID_INPUT = null;
     // TEST: private static int counter = 0;
     private static boolean found = false;
     private static List<String> results;
     private static int numOfWords = 2;
 
     public static void main(String[] args) throws IOException {
+        // REMOVE COMMENT: creates words list given the category is valid
+        // if (args.length > EMPTY) {
+        //     List<String> words = parseData(args[0]);
+        //     if (words == null) {
+        //         System.out.println("Invalid category option.");
+        //         return;
+        //     }
+        // }
+        
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter a word without space: ");
         String word = scanner.nextLine();
@@ -156,5 +167,27 @@ public class AnagramGenerator {
         char temp = chars[i];
         chars[i] = chars[j];
         chars[j] = temp;
+    }
+
+    /**
+     * Parses user's chosen category.
+     * 
+     * @param category string representing the user's chosen category
+     * @return list of possible words in category, null otherwise
+     */
+    private static List<String> parseData(String category) throws IOException {
+        File file = new File("./categories/" + category + ".txt");
+        // If there is no such file, return null
+        if (!file.exists()) {return INVALID_INPUT;}
+        BufferedReader in = new BufferedReader(new FileReader(file));
+
+        // Append each possible word to the list
+        String inputLine;
+        List<String> words = new ArrayList<>();
+        while ((inputLine = in.readLine()) != null) {
+            words.add(inputLine);
+        }
+        in.close();
+        return words;
     }
 }
