@@ -6,7 +6,10 @@ import java.io.*;
 import java.lang.*;
 
 public class AnagramGenerator {
-
+    public static final int INTRO = 14;
+    public static final int START = 0; 
+    public static final int MAX_LENGTH = 9;
+    public static final char DELIMITER = '\"';
     // TEST: private static int counter = 0;
     private static boolean found = false;
     private static List<String> results;
@@ -31,7 +34,7 @@ public class AnagramGenerator {
         Arrays.sort(chars);
 
         // Generate all possible anagrams
-        generateAnagrams(chars, 0);
+        generateAnagrams(chars, START);
 
         // Print the anagrams
         if (results == null)
@@ -84,7 +87,7 @@ public class AnagramGenerator {
         {
             String first = chars.substring(0, i);
             String second = chars.substring(i);
-            if (first.length() <= 9 && second.length() <= 9) {
+            if (first.length() <= MAX_LENGTH && second.length() <= MAX_LENGTH) {
                 List<String> list = new ArrayList<>();
                 list.add(first);
                 list.add(second);
@@ -119,8 +122,8 @@ public class AnagramGenerator {
                 List<String> best = new ArrayList<>();
                 in.skip(INTRO);
                 while (!((inputLine = in.readLine()).contains("]"))) {
-                    int start = inputLine.indexOf('\"') + 1;
-                    int end = inputLine.indexOf('\"', start);
+                    int start = inputLine.indexOf(DELIMITER) + 1;
+                    int end = inputLine.indexOf(DELIMITER, start);
                     best.add(inputLine.substring(start, end));
                 }
                 in.close();
@@ -142,6 +145,13 @@ public class AnagramGenerator {
         return null;
     }
 
+    /**
+     * Swaps two characters in a string/char[].
+     * 
+     * @param chars input
+     * @param i first character
+     * @param j second character
+     */
     private static void swap(char[] chars, int i, int j) {
         char temp = chars[i];
         chars[i] = chars[j];
