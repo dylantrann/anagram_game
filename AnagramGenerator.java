@@ -11,6 +11,7 @@ public class AnagramGenerator {
     public static final int EMPTY = 0;
     public static final int MAX_LENGTH = 9;
     public static final char DELIMITER = '\"';
+    public static final String QUIT = "";
     public static final List<String> INVALID_INPUT = null;
     // TEST: private static int counter = 0;
     private static boolean found = false;
@@ -209,7 +210,7 @@ public class AnagramGenerator {
         System.out.println("Your anagram is: \"" + anagram + "\" \nEnter your guess below!");
         while (correct != true) {
             guess = sc.nextLine();
-            if (guess.equals(original)) {
+            if (guess.equalsIgnoreCase(original)) {
                 correct = true;
                 if (tally == 1) {
                     System.out.println("Correct! You guessed in it 1 try!");
@@ -218,7 +219,7 @@ public class AnagramGenerator {
                     System.out.println("Correct! You guessed it in " + tally + " tries.");
                 }
             }
-            else if (guess.equals("")) {
+            else if (guess.equalsIgnoreCase(QUIT)) {
                 if (give == false) {
                     System.out.println("Press enter one more time to give up, or try another guess!");
                     give = true;
