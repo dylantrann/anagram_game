@@ -36,7 +36,7 @@ public class AnagramGenerator {
             category = args[0];
             List<String> words = parseData(category);
             if (words == null) {
-                throw new IllegalAccessException("Invalid category option. Please enter a valid word");
+                throw new IllegalArgumentException("Invalid category option. Please enter a valid word");
             }
             // Picks a random word from given choices
             word = words.get(rd.nextInt(words.size()-1));
@@ -92,8 +92,8 @@ public class AnagramGenerator {
     }
 
     private static void generateAnagramsRandom(char[] chars) throws IOException {
-        for (int round = 0; round < 10000; round++) {
-            if (round % 10 == 0) System.out.println("Duh-duh-duh-duh-duh");
+        for (int round = 0; round < 50; round++) {
+            if (round % 5 == 0) System.out.println("Duh-duh-duh-duh-duh");
             if (found) return;
             Random rand = new Random();
             int n = chars.length;
@@ -108,6 +108,8 @@ public class AnagramGenerator {
             if (results != null)
                 found = true;
         }
+        System.out.println("Anagram not found :(");
+        throw new IllegalArgumentException("Anagram not found :(");
     }
 
     /**
